@@ -7,4 +7,4 @@ function fn(a) {
   console.log(a)
   console.log(c)
 }
-fn()
+fn(3)
