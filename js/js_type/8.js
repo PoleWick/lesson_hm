@@ -2,7 +2,7 @@ let a = 1;
 // typeof js类型运算符
 // console.log(typeof a, typeof (a));
 // The Good Parts 什么是好的， 什么是坏的
-console.log(typeof a,+ "1");
+console.log(typeof a);
 
 console.log(typeof "hello");
 

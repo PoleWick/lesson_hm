@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网易云音乐年终总结h5</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+  <link rel="stylesheet" href="./common.css">
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+  .music-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    width: 40px;
+    height: 40px;
+    background: url(./assert/close.png) no-repeat center / cover;
+  }
+  .music-btn.off {
+    background-image: url(./assert/music.png);
+  }
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+  .swiper-slide {
+    background-color: green;
+  }
+  .swiper-slide:nth-child(odd) {
+    background-color: yellow;
+  }
+  </style>
+</head>
+<body>
+  <audio id="j-bgm" src="./bgm.mp3"></audio>
+  <div class="next-view-c"></div>
+  <div class="music-btn off"></div>
+  <!-- 滑页操作 -->
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="view index">
+          <div class="logo-c"></div>
+        </div>
+      </div>
+      <div class="swiper-slide"></div>
+      <div class="swiper-slide"></div>
+      <div class="swiper-slide"></div>
+      <div class="swiper-slide"></div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+  <script>
+  // dom 
+  const audio = document.getElementById('j-bgm');
+  // 选择器
+  const musicBtn = document.querySelector('.music-btn');
+
+  musicBtn.addEventListener('click', function() {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+    musicBtn.classList.toggle('off');
+  });
+
+  // 滑屏
+  new Swiper('.swiper-container', {
+    direction: 'vertical'
+  });
+  </script>
+</body>
+</html>
