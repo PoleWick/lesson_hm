@@ -6,12 +6,14 @@ const cy = {
 }
 
 function Person(name, age){
-    console.log(this);
     this.name = name;
     this.age = age;
+    console.log(this.name);
+  
 }
 Person.prototype = cy;
 // 原型？ cy
+Person('郭',18);
 const wu = new Person('武', 19);
 wu.playBasketball();
 console.log(wu.__proto__ === cy);

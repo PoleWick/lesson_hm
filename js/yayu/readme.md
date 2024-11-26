@@ -25,5 +25,29 @@
 - 原型
   Person.prototype.eat
 
-- 类的方法部分由原型（prototype）完成
-- 函数是对象，函数对象都有一个prototype 属性
+  - 类的方法部分由原型（prototype）完成
+  - 函数是对象，函数对象都有一个prototype 属性
+
+- js es5 的类的构建 = 构造函数（属性，对象的） + 原型（方法，所有实例共享，性能+ 没有比较归对象， this可以找到对象）
+
+- js 面向对象是原型式的面向对象（设计哲学），就好像中国人以孔子为原型，不是血缘关系
+  Person.prototype 
+
+- 将函数对象的prototype 设置为某对象(cy),
+  比class 方便
+    class{
+        constuructor(){
+            this.name = 'cy'
+        }
+        eat(){
+
+        }
+    }
+    对象可以共享原型对象上的属性和方法
+    js 原型式的面向对象 是王者
+
+## 三者关系
+- 构造函数
+- 原型对象
+  不像class 绑在一起， 拆的开
+- 实例

@@ -9,15 +9,16 @@ let fan = {
 }
 // class属于es6 
 class Person {
-    constructor(name, age, sex) {
+    constructor(name, age) {
         this.name = name;
         this.age = age;
-        this.sex = sex;
     }
     eat() {
-        console.log('吃饭');
+        console.log(`${this.name}爱吃饭`);
     }
 }
 
 let wei = new Person('阿威', 18);
+wei.eat();
 let guo = new Person('过帅', 18);
+
