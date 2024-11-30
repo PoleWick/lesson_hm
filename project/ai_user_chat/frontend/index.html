@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=
+    , initial-scale=1.0">
+    <title>AI Users Rag chatbot</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row col-md-6 col-md-offset-3">
+            <table class="table table-striped" id="user_table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>姓名</th>
+                        <th>家乡</th>
+                    </tr>
+                </thead>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>张三</td>
+                        <td>南昌</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>李四</td>
+                        <td>抚州</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>老六</td>
+                        <td>南昌</td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <div class="row">   
+                <form name="aiForm" action="http://www.baidu.com">
+                    <div class="from-group">
+                        <label for="questionInput">提问</label>
+                        <input type="text" 
+                        id="questionInput" 
+                        class="form-control" 
+                        name="question" 
+                        placeholder="请输入问题"
+                        required="required">
+                    </div>
+                    <button type="submit" class="btn btn-default" name="btn">查询</button>
+                </form>
+            </div>
+        </div>
+        <script>
+            let usersData ;
+            const oForm = document.forms['aiForm'];
+            oForm.addEventListener('submit', e =>{ 
+                //console.log(event);
+                e.preventDefault();//阻止表单默认提交行为，不进行跳转
+                //fetch  在页面不刷新的时候向 ai server 发出请求
+                //web 2.0 动态页面开发 js fetch  可以主动去拉取数据
+                const question = oForm.question.value.trim();
+                if(!question){
+                    alert('请输入问题');
+                    return;
+                } 
+                fetch(`http://localhost:1314/api?question=${question}&data=${JSON.stringify(usersData)}`)
+               .then(data => data.json())
+             .then(data => {
+                console.log(data);
+              })
+            })
+            const tableBody = document.querySelector('table tbody')
+            //const oForm = document.Forms['aiForm'];
+            //js 通过fetch函数向后端发送数据接口请求
+            //前端向后端拉取数据
+            fetch("http://localhost:3000/users")//网络请求
+                .then(res => res.json())//数据已经到达前端  得到二进制数据  得到 json 格式
+                //
+                .then(users => {
+                    // console.log(data);
+                    usersData = users;
+                    for (let user of users) {
+                        //console.log(user);
+                        const tr = document.createElement('tr');
+                        //for in json 遍历对象
+                        for (let key in user) {
+                            const td = document.createElement('td');
+                            td.innerText = user[key];
+                            tr.appendChild(td);
+                            //console.log(key, user[key]);
+                        }
+
+                        /*const idTd = document.createElement('td');
+                        idTd.innerText = user.id;
+                        tr.appendChild(idTd);
+    
+                        const nameTd = document.createElement('td');
+                        nameTd.innerText = user.name;
+                        tr.appendChild(nameTd);
+    
+                        const hometownTd = document.createElement('td');
+                        hometownTd.innerText = user.hometown;
+                        tr.appendChild(hometownTd);
+                        */
+
+                        tableBody.appendChild(tr)
+                    }
+                })
+        </script>
+</body>
+
+</html>
