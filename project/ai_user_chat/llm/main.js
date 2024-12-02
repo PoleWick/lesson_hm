@@ -4,7 +4,7 @@ const OpenAi = require('openai');
 const url = require('url');// node 内置
 
 const client = new OpenAi({
-  apiKey: 'sk-xxxxxxxxxxxxxxxxxxxx',
+  apiKey: 'sk-DQyFVvlYDkVEcwRy1uY6WOkEz0AUhGeQRdSQ0mXKA4JgCp8M',
   baseURL: 'https://api.302.ai/v1'
 });
 
