@@ -1,4 +1,3 @@
-"use strict"
 var x = 2;
 var obj = {
     x:1,
