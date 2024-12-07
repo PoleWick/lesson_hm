@@ -5,3 +5,4 @@ function climbStairs(n) {
 }
 
 console.log(climbStairs(4));
+

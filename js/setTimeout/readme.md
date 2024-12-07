@@ -11,4 +11,12 @@
 
 - 如何用 setTimeout 实现 setInterval ？
   - 场景编程题
-  - 手写题
+  - 手写题 fn
+    - customInterval
+    - callback , t  参数
+    - 可以用setTimeout 实现
+    - 递归
+    - 关闭？
+
+- call
+  - 函数对象上的方法
