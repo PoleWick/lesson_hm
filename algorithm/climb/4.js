@@ -17,4 +17,4 @@ const coinChange = function(coins, amount) {
     return f[amount];
 };
 
-coinChange([1,2,5], 11);
+console.log(coinChange([2,5], 3));
