@@ -9,13 +9,18 @@
 <script>
 var a = {
   name: 'Cherry',
+  // call apply 区别
+  // call 一个个给 call(thisBinder, a, b,c, ...参数)
+  // apply 一次性给，以数组的形式 apply(thisBinder, [a, b,c,...参数])
   fn: function(a, b) {
     console.log(this.name)
+    //a[1,2] + b undefined
+    // +两边都是数字就是加法，如果不是，连接运算符
     console.log(a + b)
   }
 }
 
-var b = a.fn;
+var b = a.fn;//普通函数
 // 指定this
 // 立即执行
 // 参数
