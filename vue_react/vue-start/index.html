@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue3 Couter</title>
+  <!-- vue 3 
+  不是本地， 通过cdn 引入 内容分发网络
+  静态资源（html, css, js , images）  动态（java, node, 数据库 服务器集群）
+  cdn 快速内容访问和发布的机制  -->
+  <script src="./vue.js"></script>
+  <style>
+    .big-font {
+      font-size: 2em; /* 定义字体变大的样式 */
+    }
+  </style>
+</head>
+<body>
+  <!-- vue 3 工作的挂载点 接管前端编程世界 
+  DOM appendChild 性能不好，  -->
+  
+  <div id="root">
+    <!-- Vue应用的工作领地 -->
+    <h1 :class="{ 'big-font': isBig }">{{str}} 走向{{LLM}} 智能前端！</h1>
+    <p>Count: {{count}}</p>
+    <button @click="increment">+1</button>
+    <button @click="clr">清除</button>
+    <button @click="toggleFontSize">变大</button> <!-- 添加新按钮 -->
+  </div>
+  <script type="module">
+  // console.log('hello, vue')
+  const {
+    createApp, // 创建Vue应用
+    ref
+  } = Vue
+
+  createApp({
+    // 准备应用需要的数据
+    setup() {
+      const count = ref(0) ;
+      const str = ref("hello vue")
+      const isBig = ref(false); // 添加一个新的响应式变量来控制字体大小
+      const increment = () => {
+        // console.log('---------------')
+        count.value++;
+      }
+      const clr = () => {
+        count.value = 0;
+    }
+      const toggleFontSize = () => {
+        isBig.value = !isBig.value; // 切换字体大小
+      }
+      return {
+        LLM: 'Llama3',
+        count,
+        str,
+        clr,
+        increment,
+        toggleFontSize // 添加新方法
+      }
+    }
+  }).mount('#root') // 挂载点
+  </script>
+</body>
+
+</html>
