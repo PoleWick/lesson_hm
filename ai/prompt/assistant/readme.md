@@ -14,3 +14,5 @@
   - 给返回内容约定一个格式
 
 - 当看完吴恩达的Prompt Engineering 课程，掌握了prompt的基本规则， 感受自然语义编程的魅力。
+
+  - cursor + prompt 自然语义编程

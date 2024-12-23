@@ -8,7 +8,10 @@ function arrEqual(arr1, arr2) {
   }
   for (const item of arr2) {
     const val = countMap.get(item);
-    if (!val||val<=0) return false;
+    if (!val||val<=0){
+        return false
+    } ;
+    countMap.set(item, val - 1);
   }
-  countMap.set(item, val - 1);
+return true;
 }

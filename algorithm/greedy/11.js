@@ -2,7 +2,7 @@
 
 function coinChange(coins, amount){
     let count = 0;
-    for(let i = 0; i < coins.length; i++){
+    for(let i = coins.length - 1; i >= 0; i--){
         while(amount >= coins[i]){
             amount -= coins[i];
             count++;

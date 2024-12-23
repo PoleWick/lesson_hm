@@ -5,3 +5,8 @@ set.add(2)
 set.add(3)
 set.add(3)
 console.log(set.size);
+
+const arr = [1,2,3,3]
+var uniqueArr = [...new Set(arr)] // 变成数组
+console.log(Array.from(new Set(arr))) 
+console.log(uniqueArr);

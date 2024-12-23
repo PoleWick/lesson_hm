@@ -10,3 +10,5 @@ const hasEvenNumber = scores.some(score => score % 2 === 0);
 
 console.log([1, 2, 3].indexOf(2),[1, 2, 3].indexOf(4),[1, 2, 3].indexOf(1));
 
+
+
