@@ -10,7 +10,7 @@
         <div class="city-name">{{weatherData.city}}</div>
         <div class="weather">{{weatherData.weather}}</div>
         <h2 class="temp">
-          <em>{{weatherData.temperature}}</em>C
+          <em>{{weatherData.temperature}}</em>℃
         </h2>
         <div class="detail">
           <span>风力: {{weatherData.windPower}}级</span>

@@ -17,3 +17,4 @@
 
    - overflow:auto; 给nav元素开启了一个BFC
      - 规则，BFC 元素可以得到 内部的浮动元素 的高度
+     - 块级元素不等于BFC

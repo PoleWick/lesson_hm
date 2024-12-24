@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 地球</title>
+    <!-- 引入three.js库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script>
+// 初始化场景、相机、渲染器等
+function init() {
+    // 创建场景
+    scene = new THREE.Scene();
+    
+    // 创建相机
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
+    camera.position.z = 500;
+
+    // 创建渲染器并添加到DOM中
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // 加载纹理并创建地球网格
+    const loader = new THREE.TextureLoader();
+    loader.load('https://threejsfundamentals.org/threejs/resources/images/land_ocean_ice_cloud_2048.jpg', function(texture) {
+        const geometry = new THREE.SphereGeometry(200, 32, 32); // 增加细分段数使球体更圆滑
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        const earth = new THREE.Mesh(geometry, material);
+        scene.add(earth);
+
+        animate(); // 开始动画循环
+    });
+}
+
+// 动画循环
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+
+// 监听窗口大小变化
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+init(); // 调用初始化函数
+
+</script>
+</body>
+</html>
