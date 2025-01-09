@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模版编译</title>
+</head>
+<body>
+<script>
+let template = '我是{{name}}, 年龄{{age}}，性别{{sex}}';
+let person = {
+  name: '嘎兰',
+  age: 12,
+  sex: '女'
+};
+
+function compile(template, data) {
+  // 使用全局标志 g 来确保所有占位符都被替换
+  let reg = /\{\{(\w+)\}\}/g;
+  
+  // 使用 replace 方法进行替换，同时提供默认值处理
+  return template.replace(reg, function(match, key) {
+    // 检查 data 中是否存在对应的 key
+    return key in data ? data[key] : '';
+  });
+}
+
+// 调用 compile 函数并输出结果
+let result = compile(template, person);
+console.log(result); // 输出：我是嘎兰, 年龄12，性别女
+
+
+</script>
+</body>
+</html>
