@@ -1,0 +1,4 @@
+- redux
+- type 和 interface 区别
+  - type 可以定义基本类型，联合类型，元组，交叉类型，函数等
+  - interface 只能定义对象类型
