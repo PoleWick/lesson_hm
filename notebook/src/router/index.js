@@ -1,5 +1,5 @@
-import Index from '@/views/Index'
-import About from '@/views/About'
+import  Index  from '../views/Index'
+import  About  from '../views/About'
 
 const routes = [
   {

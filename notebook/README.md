@@ -27,10 +27,31 @@
 
   as 起别名
 
+- key 的用法
+  循环输出组件，需有给唯一的key 值需要唯一
+  update 性能
 
-
-
-
+- 选择框架
+  - zarm 移动端 react ui组件库
+    指定3.1.2版本 npm i zarm@3.1.2
+  - 引入组件 button
+  - 引入样式
+  - 引入配置ConfigProvider theme primaryColor
+  - 主题定制 theme primaryColor
+- npm run build
+  - 上线之前先打包
+  - dist/ 结果目录
+    - src/ 开发目录
+      代码质量和可读性
+    - 不需要注释、换行等 只要浏览器能运行就好
+      文件小，压缩，传输更快
+    - 组件打包成js文件， css打包成一个css文件
+      性能优化  http  并发数  一个js 文件
+      - 依赖关系
+        - 不需要模块化
+          被依赖的放在上面，依赖的放在下面
+        - 递归依赖关系
+    - vite 很快
 
 
 
@@ -106,3 +127,37 @@
     CRUD
   - model
     User
+
+  - egg.js api 服务
+    - 路由 
+      http 协议
+    - controller
+      extends Controller
+      参数校验、 业务逻辑...
+      返回接口需要的json 数据
+    - model
+      模型定义 table -> model
+    - service
+      数据库操作 CRUD
+    - views
+      api 服务，后端不负责界面, react 负责
+
+  - 登录注册
+    - 密码加密
+      不能存明文, 单项加密
+    - jwt json web token
+      {
+        id: 1,
+        username: 'admin',
+        exp: 1693650712
+      }
+      jwt sign token
+      后端签发
+      - secret 加密 服务器端才能解开
+      - 40几位的加密串
+      前端localStorage 存
+      axios 请求 拦截在请求头中
+      authorization: token(localStorage)
+      后端verify token -> json user
+    
+    - egg-jwt jsonwebtoken
