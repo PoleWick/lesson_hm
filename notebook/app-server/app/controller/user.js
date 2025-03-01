@@ -12,7 +12,6 @@ class UserController extends Controller {
     const { ctx } = this;
     // 解构请求体
     const { username, password } = ctx.request.body;
-    console.log(username, password, '----------------------');
     // 校验参数
     if (!username || !password) {
       ctx.body  = {
@@ -63,7 +62,7 @@ class UserController extends Controller {
     // 参数
     const { ctx, app } = this;
     const { username, password } = ctx.request.body;
-
+    console.log(username, password, '---------------');
     if (!username || !password) {
       ctx.body = {
         code: 400,
@@ -93,19 +92,89 @@ class UserController extends Controller {
       }
       return 
     }
-    
+
+
+    // jwt 要给用户颁发一个token
     const token = app.jwt.sign({
-      id: user.id,
-      username: user.username,
-      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7) // 7天过期
+      id: userInfo.id,
+      username: userInfo.username,
+      exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24小时过期
     })
+
     ctx.body = {
       code: 200,
-      msg: '登录成功',
+      message: '登录成功',
       data: {
         token
       }
     }
+  }
+  
+  async editSignature() {
+    const { ctx } = this;
+    console.log(ctx.user, '?????/')
+    if  (!ctx.user) {
+      ctx.body = {
+        code: 401,
+        msg: '请先登录',
+        data: null
+      }
+      return;
+    }
+
+    const { signature } = ctx.request.body;
+    if (!signature) {
+      ctx.body = {
+        code: 400,
+        msg: '签名不能为空',
+        data: null
+      }
+      return;
+    }
+    try {
+      const result = await ctx.service.user.editUserInfo(
+        ctx.user.username, 
+        signature
+      )
+      ctx.body = {
+        code: 200,
+        msg: '修改成功',
+        data: result
+      }
+    }catch(err) {
+      ctx.body = {
+        code: 500,
+        msg: '修改失败',
+        data: null
+      }
+    }
+    
+  }
+
+  async getUserInfo() {
+    const { ctx } = this;
+    if (!ctx.user) {
+      ctx.body = {
+        code: 401,
+        msg: '请先登录',
+        data: null
+      }
+      return;
+    } 
+    try{
+    const result = await ctx.service.user.getUserByName(ctx.user.username)
+    ctx.body = {
+      code: 200,
+      msg: '获取成功',
+      data: result 
+    }
+  }catch(err) {
+    ctx.body = {
+      code: 500,
+      msg: '获取失败',
+      data: null
+    }
+  }
   }
 }
 

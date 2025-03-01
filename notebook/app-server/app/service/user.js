@@ -30,6 +30,26 @@ class UserService extends Service {
       return null;
     }
   }
+
+  async editUserInfo(username, signature) {
+    const { ctx } = this
+    try {
+      const user = await this.getUserByName(username);
+      console.log(user);
+      if (!user) {
+        ctx.statues = 404;
+        return null; 
+      } 
+      let result = await user.update({
+        signature:signature 
+      })
+      return result;
+    } 
+    catch(err) {
+      console.log(err);
+      return null; 
+    }
+  }
 }
 
 module.exports = UserService;
