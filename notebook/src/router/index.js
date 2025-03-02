@@ -2,7 +2,7 @@ import Home from '@/views/Home'
 import Data from '@/views/Data'
 import User from '@/views/User'
 import Login from '@/views/Login'
-import  UserInfo  from '../views/UserInfo'
+import UserInfo from '@/views/UserInfo'
 
 const routes = [
   {
@@ -22,12 +22,12 @@ const routes = [
     component: User
   },
   {
-    path: '/login',
-    component: Login
+    path: '/userinfo',
+    component: UserInfo
   },
   {
-    path: '/userinfo',
-    component:UserInfo
+    path: '/login',
+    component: Login
   }
 ]
 

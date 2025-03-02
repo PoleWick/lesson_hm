@@ -17,7 +17,14 @@ export default defineConfig({
   css: {
     modules: {
       localsConvention: 'dashesOnly'
-    }
+    },
+    preprocessorOptions: {
+      // 针对 Less 预处理器的配置
+     less: {
+       // 允许在 Less 文件中使用内联 JavaScript
+       javascriptEnabled: true,
+     }
+   }
   },
   resolve: {
     alias: {
@@ -29,18 +36,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:7001',
+        target: 'http://localhost:7001/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
-  },
-  external: [
-    '@babel/runtime/helpers/getPrototypeOf',
-    '@babel/runtime/helpers/defineProperty',
-    '@babel/runtime/helpers/classCallCheck',
-    '@babel/runtime/helpers/createClass',
-    '@babel/runtime/helpers/inherits',
-    '@babel/runtime/helpers/possibleConstructorReturn'
-  ]
+  }
 })

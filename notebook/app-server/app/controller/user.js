@@ -160,22 +160,24 @@ class UserController extends Controller {
         data: null
       }
       return;
-    } 
-    try{
-    const result = await ctx.service.user.getUserByName(ctx.user.username)
-    ctx.body = {
-      code: 200,
-      msg: '获取成功',
-      data: result 
     }
-  }catch(err) {
-    ctx.body = {
-      code: 500,
-      msg: '获取失败',
-      data: null
+    try {
+      const result = await ctx.service.user.getUserByName(ctx.user.username)
+      ctx.body = {
+        code: 200,
+        msg: '获取成功',
+        data: result
+      }
+    } catch(err) {
+      ctx.body = {
+        code: 500,
+        msg: '获取失败',
+        data: null
+      }
     }
+    
   }
-  }
+
 }
 
 module.exports = UserController;

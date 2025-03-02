@@ -37,17 +37,15 @@ class UserService extends Service {
       const user = await this.getUserByName(username);
       console.log(user);
       if (!user) {
-        ctx.statues = 404;
-        return null; 
-      } 
+        ctx.status = 404;
+        return null;
+      }
       let result = await user.update({
-        signature:signature 
+        signature: signature
       })
-      return result;
-    } 
-    catch(err) {
-      console.log(err);
-      return null; 
+      return result 
+    } catch(err) {
+
     }
   }
 }

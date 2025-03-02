@@ -4,12 +4,12 @@ module.exports = {
   // static: {
   //   enable: true,
   // }
-  sequelize:{
+  mysql: {
     enable:true,
-    package:'egg-sequelize'
+    package: 'egg-sequelize'
   },
-  jwt:{
-    enable:true,
-    package:'egg-jwt'
+  jwt: {
+    enable: true,
+    package: 'egg-jwt'
   }
 };

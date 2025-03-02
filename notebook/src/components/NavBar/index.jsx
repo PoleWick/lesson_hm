@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TabBar } from 'zarm';
-import s from './style.module.less'
+import s from './style.module.less';
 // 有哪些类型
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
