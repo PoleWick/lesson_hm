@@ -16,6 +16,7 @@
   - http 是基于请求响应的，websocket 是基于事件的
     onmessage
     send
+    
 - websocket 服务搭建流程
   - 首先基于http服务 访问chat 页面
   - html5 websocket 向服务器端的socket 服务发起连接

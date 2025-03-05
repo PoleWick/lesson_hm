@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .truncate-multiline {
+            width: 200px;
+            /* 使用标准的弹性盒子模型 */
+            display: -webkit-box;
+            /* 使用Webkit盒模型以兼容旧版WebKit浏览器 */
+
+
+            /* 设置为垂直排列并且允许截断 */
+            -webkit-box-orient: vertical;
+            -moz-box-orient: vertical;
+            box-orient: vertical;
+
+            /* 限制显示的行数 */
+            -webkit-line-clamp: 3;
+            -moz-line-clamp: 3;
+            line-clamp: 3;
+
+            overflow: hidden;
+            /* 隐藏溢出的内容 */
+            text-overflow: ellipsis;
+            /* 在末尾添加省略号 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="truncate-multiline">
+        这是一个很长的文本示例， 他将被截断并用省略号显示。这是一个很长的文本示例，
+        他将被截断并用省略号显示。这是一个很长的文本示例， 他将被截断并用省略号显示。
+        这是一个很长的文本示例， 他将被截断并用省略号显示。
+    </div>
+</body>
+
+</html>
