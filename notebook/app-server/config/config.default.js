@@ -15,6 +15,10 @@ module.exports = appInfo => {
 
   // add your middleware config here
   config.middleware = [];
+
+  // 添加API前缀配置
+  config.prefix = '/api';
+
   // 安全性
   config.security = {
     csrf: {
@@ -23,13 +27,20 @@ module.exports = appInfo => {
     },
     domainWhiteList: ['*']
   }
+
+  // 文件上传配置
+  config.multipart = {
+    mode: 'file',
+    fileSize: '200kb',
+    whitelist: ['.jpg', '.jpeg', '.png']
+  }
   // 加密
   config.jwt = {
     secret: '!%shunwuyu123$'
   }
-  // 
-  exports.sequelize = {
-    dialog: 'mysql',
+  // 数据库配置
+  config.sequelize = {
+    dialect: 'mysql',
     host: 'localhost',
     port: '3306',
     database: 'zhangben',
@@ -42,6 +53,13 @@ module.exports = appInfo => {
     }
   }
 
+  // 配置服务器监听端口
+  config.cluster = {
+    listen: {
+      port: 7002
+    }
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
@@ -49,6 +67,6 @@ module.exports = appInfo => {
 
   return {
     ...config,
-    ...userConfig,
+    ...userConfig
   };
 };

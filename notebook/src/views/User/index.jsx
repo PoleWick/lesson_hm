@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   Cell, Input, Button, Modal
 } from 'zarm';
-import { getUserInfo } from '@/utils'
+import { getUserInfo as getUserInfoUtil, get } from '@/utils'
 
 const User = () => {
   const [signature, setSignature] = useState('')
@@ -19,14 +19,16 @@ const User = () => {
     navigate('/login')
   }
 
-  // const getUserInfo = async () => {
-  //   const { data } = await get('/api/user/get_userinfo');
-  // }
+  const getUserInfo = async () => {
+    const { data } = await getUserInfoUtil();
+    setUser(data);
+    setSignature(data.signature || '');
+  }
 
   useEffect(() => {
-    // if (!localStorage.getItem('token')) {
-    //   navigate('/login')
-    // }
+    if (!localStorage.getItem('token')) {
+      navigate('/login')
+    }
     getUserInfo();
   }, []) 
 
@@ -41,11 +43,11 @@ const User = () => {
               src="//s.yezgea02.com/1616032174786/cryptocurrency.png" 
               alt="" 
             />
-            <b onClick={() => setShowSignatureModal(true)}>这个家伙很懒，什么都没有留下</b>
+            <b onClick={() => setShowSignatureModal(true)}>{user.signature || '这个家伙很懒，什么都没有留下'}</b>
           </span>
         </div>
         <img 
-          src="https://p26-passport.byteacctimg.com/img/user-avatar/06b83e3cfbde35bd2e711fb625da50da~200x200.awebp" alt="" 
+          src={user.avatar || "https://p26-passport.byteacctimg.com/img/user-avatar/06b83e3cfbde35bd2e711fb625da50da~200x200.awebp"} alt="" 
           className={s.avatar} 
           style={{width: 60, height: 60, borderRadius: 8}} 
         />

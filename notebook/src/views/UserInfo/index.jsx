@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, FilePicker, Input, Toast } from 'zarm';
 import { useNavigate } from 'react-router-dom';
-// import Header from '@/components/Header';
+import Header from '@/components/Header';
 import axios from 'axios';
 import { 
-  getUserInfo ,
+  getUserInfo as getUser,
   updateSignature
 } from '@/api'
-// import { get, post } from '@/utils'
-// import { baseUrl } from 'config'
+import { get, post } from '@/utils'
+import { baseUrl } from '@/config'
 import s from './style.module.less';
 
 const UserInfo = () => {
@@ -19,54 +19,69 @@ const UserInfo = () => {
   const token = localStorage.getItem('token')
 
   useEffect(() => {
-    (async () => {
-      const { data } = await getUserInfo();
-      console.log(data)
-      setSignature(data.signature)
-    })()
+    getUserInfo()
   }, [])
 
   // 获取用户信息
-  // const getUserInfo = async () => {
-  //   const { data } = await get('/api/user/get_userinfo');
-  //   setUser(data);
-  //   setAvatar(imgUrlTrans(data.avatar))
-  //   setSignature(data.signature)
-  // };
+  const getUserInfo = async () => {
+    const { data } = await getUser();
+    setUser(data);
+    setAvatar(data.avatar)
+    setSignature(data.signature)
+  };
 
-  // const handleSelect = (file) => {
-  //   console.log('file.file', file.file)
-  //   if (file && file.file.size > 200 * 1024) {
-  //     Toast.show('上传头像不得超过 200 KB！！')
-  //     return
-  //   }
-  //   let formData = new FormData()
-  //   formData.append('file', file.file)
-  //   axios({
-  //     method: 'post',
-  //     url: `/api/upload`,
-  //     data: formData,
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data',
-  //       'Authorization': token
-  //     }
-  //   }).then(res => {
-  //     // setAvatar(imgUrlTrans(res.data))
-  //   })
-  // }
+  const handleSelect = (file) => {
+    console.log('file.file', file.file)
+    if (file && file.file.size > 200 * 1024) {
+      Toast.show('上传头像不得超过 200 KB！！')
+      return
+    }
+    let formData = new FormData()
+    formData.append('file', file.file)
+    axios({
+      method: 'post',
+      url: `/upload`,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': token
+      }
+    }).then(res => {
+      if (res.code === 200) {
+        console.log(res.data, '////////')
+        setAvatar(res.data)
+        // 更新用户信息
+        // getUserInfo()
+        Toast.show('头像上传成功')
+      } else {
+        Toast.show('头像上传失败')
+      }
+    }).catch(err => {
+      Toast.show('头像上传失败')
+      console.error(err)
+    })
+  }
 
   const save = async () => {
-    const { data } = await updateSignature(signature);
-
-    Toast.show('修改成功')
-    navigate.go(-1)
+    try {
+      const { data } = await updateSignature(signature);
+      if (data.code === 200) {
+        Toast.show('修改成功')
+        navigate(-1)
+      } else {
+        Toast.show(data.msg || '修改失败')
+      }
+    } catch (error) {
+      Toast.show('修改失败')
+      console.error(error)
+    }
   }
 
   return <>
-    {/* <Header title='用户信息' /> */}
+    <Header title='用户信息' />
     <div className={s.userinfo}>
       <h1>个人资料</h1>
-      {/* <div className={s.item}>
+      <div className={s.item}>
         <div className={s.title}>头像</div>
         <div className={s.avatar}>
           <img className={s.avatarUrl} src={avatar} alt=""/>
@@ -77,7 +92,7 @@ const UserInfo = () => {
             </FilePicker>
           </div>
         </div>
-      </div> */}
+      </div>
       <div className={s.item}>
         <div className={s.title}>个性签名</div>
         <div className={s.signature}>

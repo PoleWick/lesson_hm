@@ -35,17 +35,28 @@ class UserService extends Service {
     const { ctx } = this
     try {
       const user = await this.getUserByName(username);
-      console.log(user);
       if (!user) {
-        ctx.status = 404;
-        return null;
+        return {
+          code: 404,
+          msg: '用户不存在',
+          data: null
+        };
       }
-      let result = await user.update({
+      const result = await user.update({
         signature: signature
-      })
-      return result 
+      });
+      return {
+        code: 200,
+        msg: '修改成功',
+        data: result
+      };
     } catch(err) {
-
+      console.log(err);
+      return {
+        code: 500,
+        msg: '修改失败',
+        data: null
+      };
     }
   }
 }

@@ -30,15 +30,15 @@ export default defineConfig({
     alias: {
       // 项目的物理路径
       '@': path.resolve(__dirname, 'src'),
-      'utils': path.resolve(__dirname, 'src/utils')
+      'utils': path.resolve(__dirname, 'src/utils'),
+      '@views': path.resolve(__dirname, 'src/views')
     }
   },
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:7001/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        target: 'http://localhost:7001',
+        changeOrigin: true
       }
     }
   }

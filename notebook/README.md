@@ -353,3 +353,39 @@
       - 路由
       - userinfo 组件
       - api  editUserInfo
+
+- bill CRUD
+  - SQL建表
+  - mvc
+    - model
+    使用AI 生成 prompt 基于sql，使用egg.js sequelize 生成model定义
+    - controller
+    - service
+      - app.model.Bill.create() 新增
+      - app.model.Bill.update({}, {
+        where: 
+      }) 修改
+      - app.model.Bill.destroy({}) 
+
+    - router
+      restful
+      /bill post
+      /bill/:id patch
+      /bill/:id delete
+
+- 订单详情页全栈开发
+  - 后端接口
+    - 路由 1.restful 添加路由
+    - 中间件
+    - 控制器 detail  params id
+    - service id -》bill
+      - model
+      - orm
+    - 路由
+      /bill/:id get
+      返回数据，完成接口开发
+    
+  - 前端
+    - 路由  
+    - useLocation + querystring 解析id
+    npm 包 query-string 

@@ -179,17 +179,29 @@ document.addEventListener('DOMContentLoaded', function() {
       ({ role, content }) => appendMessage(role, content, 'init')
     )
   }
-  // 保存当前对话 to be continue 
+  // 保存当前对话
   const saveCurrentConversation = () => {
     const currentChatLog = JSON.parse(localStorage.getItem("chatLog")) || [];
+    // 检查当前对话是否为空
+    if (currentChatLog.length === 0) {
+      alert('当前没有对话内容可保存');
+      return;
+    }
+    
     const chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
     const timestamp = new Date().toLocaleString();
     chatHistory.push({
       // 产品需求 实现
       name: `对话 ${chatHistory.length + 1} (${timestamp})`,
       messages: currentChatLog
-    })
+    });
     localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    
+    // 保存后重新加载对话列表
+    loadConversationList();
+    
+    // 提示用户保存成功
+    alert('对话已成功保存');
   }
 
   // 创建新的对话
@@ -201,6 +213,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   const loadConversationList = () => {
+    // 清空现有的对话列表，避免重复添加
+    conversationListElement.innerHTML = '';
     const chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
     chatHistory.forEach((conversation, index) => {
       const button = document.createElement('button');
@@ -226,7 +240,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // 删除聊天历史
   const deleteChatHistory = (index) => {
-    // to be continue
+    const chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+    // 确保索引有效
+    if (index >= 0 && index < chatHistory.length) {
+      // 从数组中删除指定索引的对话
+      chatHistory.splice(index, 1);
+      // 更新localStorage
+      localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+      // 重新加载对话列表
+      conversationListElement.innerHTML = '';
+      loadConversationList();
+    }
   }
 
   conversationListElement.addEventListener('click', function(event) {
