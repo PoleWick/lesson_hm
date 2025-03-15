@@ -4,7 +4,7 @@ import qs from 'query-string';
 import { getBillDetail } from '@/api';
 import AppHeader from '@/components/AppHeader';
 import s from './style.module.less';
-import CustomIcon from '@/components/CustiomIcon';
+import CustomIcon from '@/components/CustomIcon';
 import { typeMap } from '@/utils'; // 全局配置
 import cx from 'classnames'; // 类名绑定
 

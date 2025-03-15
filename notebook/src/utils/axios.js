@@ -16,7 +16,7 @@ axios.interceptors.request.use(config => {
 })
 // 响应拦截器
 axios.interceptors.response.use(res => {
-  console.log('响应拦截~~~~~',res, res.data) 
+  // console.log('响应拦截~~~~~',res, res.data) 
   // // 统一处理错误
   // // 加工数据
   if (typeof res.data !== 'object') {

@@ -51,7 +51,6 @@ const UserInfo = () => {
         console.log(res.data, '////////')
         setAvatar(res.data)
         // 更新用户信息
-        // getUserInfo()
         Toast.show('头像上传成功')
       } else {
         Toast.show('头像上传失败')
