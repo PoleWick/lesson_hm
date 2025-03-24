@@ -46,33 +46,35 @@ const ResetPassword = () => {
 
   return (
     <>
-    <Header title="重置密码" />
-    <div className={style.auth}>
-      <div className={style.head}></div>
-      <div className={style.form}>
-        <Cell title="新密码">
-          <Input
-            clearable
-            type="password"
-            placeholder="请输入新密码"
-            onChange={(value) => setPassword(value)}
-          />
-        </Cell>
-        <Cell title="确认密码">
-          <Input
-            clearable
-            type="password"
-            placeholder="请再次输入新密码"
-            onChange={(value) => setConfirmPassword(value)}
-          />
-        </Cell>
-      </div>
-      <div className={style.operation}>
-        <Button block theme="primary" onClick={handleSubmit}>
-          确认重置
-        </Button>
-      </div>
-    </div>
+      <form>
+        <Header title="重置密码" />
+        <div className={style.auth}>
+          <div className={style.head}></div>
+          <div className={style.form}>
+            <Cell title="新密码">
+              <Input
+                clearable
+                type="password"
+                placeholder="请输入新密码"
+                onChange={(value) => setPassword(value)}
+              />
+            </Cell>
+            <Cell title="确认密码">
+              <Input
+                clearable
+                type="password"
+                placeholder="请再次输入新密码"
+                onChange={(value) => setConfirmPassword(value)}
+              />
+            </Cell>
+          </div>
+          <div className={style.operation}>
+            <Button block theme="primary" onClick={handleSubmit}>
+              确认重置
+            </Button>
+          </div>
+        </div>
+      </form>
     </>
   )
 }

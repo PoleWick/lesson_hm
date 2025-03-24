@@ -16,6 +16,7 @@ module.exports = app => {
   // 用户模块
   router.post('/register', controller.user.register); // 注册
   router.post('/login', controller.user.login); // 登录
+  router.post('/token/refresh', controller.token.refresh); // 刷新token
   router.post('/upload', controller.upload.index); // 上传文件
   // 部分修改资源 put 完全替换（文件）   patch 部分
   router.patch('/user/signature', _jwt, controller.user.editSignature)

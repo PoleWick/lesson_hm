@@ -39,7 +39,8 @@ const routes = [
   {
     path:'/about',
     component: About
-  }
+  },
+  
 ]
 
 export default routes

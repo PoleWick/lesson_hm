@@ -11,7 +11,13 @@ import cx from 'classnames'; // 类名绑定
 const Detail = () => {
     const location = useLocation();
     const { id } = useParams();
-    const [detail, setDetail] = useState({});
+    const [detail, setDetail] = useState({
+        pay_type: 1,
+        type_id: 1,
+        amount: 0,
+        date: '-',
+        remark: '-'
+    });
 
     const getDetial = async () => {
         try {
@@ -24,6 +30,15 @@ const Detail = () => {
 
     useEffect(() => {
         getDetial();
+        return () => {
+            setDetail({
+                pay_type: 1,
+                type_id: 1,
+                amount: 0,
+                date: '-',
+                remark: '-'
+            });
+        };
     }, []);
 
     return (
@@ -31,12 +46,12 @@ const Detail = () => {
             <AppHeader title="账单详情" />
             <div className={s.card}>
                 <div className={s.type}>
-                    <span className={cx({[s.expense]:detail.pay_type==1,[s.income]:detail.pay_type==2})}>
-                        <CustomIcon>
+                    {detail && <span className={cx({[s.expense]:detail.pay_type==1,[s.income]:detail.pay_type==2})}>                        
+                        <CustomIcon 
                             className={s.iconfont}
-                            type={detail.type_id?typeMap[detail.type_id].icon:1}
-                        </CustomIcon>
-                    </span>
+                            type={detail.type_id && typeMap[detail.type_id] ? typeMap[detail.type_id].icon : 'qita'}
+                        />
+                    </span>}
                     <span>{detail.type_name}</span>
                 </div>
                 <div className={s.amount}>

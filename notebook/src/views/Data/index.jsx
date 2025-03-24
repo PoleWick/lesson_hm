@@ -5,6 +5,7 @@ import CustomIcon from '@/components/CustomIcon';
 import { typeMap } from '@/utils';
 import Header from '@/components/Header';
 
+
 const Data = () => {
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
@@ -44,8 +45,9 @@ const Data = () => {
   }, []);
 
   return (
+    <>
+      <Header title="数据统计" showLeft={false} />
     <div className={s.data}>
-      <Header title="统计" />
       <div className={s.total}>
         <div className={s.time}>
           <span>2023年12月</span>
@@ -96,6 +98,7 @@ const Data = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

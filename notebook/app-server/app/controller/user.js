@@ -94,18 +94,15 @@ class UserController extends Controller {
     }
 
 
-    // jwt 要给用户颁发一个token
-    const token = app.jwt.sign({
-      id: userInfo.id,
-      username: userInfo.username,
-      exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24小时过期
-    })
+    // 生成双token
+    const { token, refreshToken } = await ctx.service.user.generateToken(userInfo);
 
     ctx.body = {
       code: 200,
       message: '登录成功',
       data: {
-        token
+        token,
+        refreshToken
       }
     }
   }

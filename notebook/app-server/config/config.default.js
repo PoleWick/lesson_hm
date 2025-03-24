@@ -36,7 +36,8 @@ module.exports = appInfo => {
   }
   // 加密
   config.jwt = {
-    secret: '!%shunwuyu123$'
+    secret: '!%shunwuyu123$',
+    refreshSecret: '!%shunwuyu123$_refresh'
   }
   // 数据库配置
   config.sequelize = {

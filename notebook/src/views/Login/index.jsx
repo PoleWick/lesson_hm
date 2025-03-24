@@ -2,7 +2,7 @@ import React, {
   useState,
   useRef,
   useCallback,
-  useEffect 
+  useEffect
 } from 'react';
 import {
   Cell,
@@ -28,7 +28,7 @@ const Login = () => {
   useEffect(() => {
     document.title = type === 'login' ? '登录' : '注册'
   }, [type])
-  
+
   const onSubmit = async () => {
     if (!username) {
       Toast.show('请输入账号');
@@ -61,58 +61,60 @@ const Login = () => {
         Toast.show('注册成功');
         setType('login');
       }
-    } catch(err) {
+    } catch (err) {
       Toast.show('系统错误');
-    }  
+    }
   }
 
   return (
-    <div className={s.auth}>
-      <div className={s.head} />
-      <div className={s.tab}>
-        <span className={cx({ [ s.active ]: type== 'login'})} onClick={() => setType('login')}>登录</span>
-        <span className={cx({ [ s.active ]: type== 'register'})} onClick={() => setType('register')}>注册</span>
-      </div>
-      <div className={s.form}>
-        <Cell icon={<CustomIcon type="zhanghao"/>}>
-          <Input 
-            clearable
-            type="text"
-            placeholder='请输入账号'
-            onChange={(value) => setUsername(value)}
-          />
-        </Cell>
-        <Cell icon={<CustomIcon type="mima"/>}>
-          <Input 
-            clearable
-            type="password"
-            placeholder='请输入密码'
-            onChange={(value) => setPassword(value)}
-          />
-        </Cell>
-        { type=="register" && (
-          <Cell icon={<CustomIcon type="mima"/>}>
-            <Input 
+    <form>
+      <div className={s.auth}>
+        <div className={s.head} />
+        <div className={s.tab}>
+          <span className={cx({ [s.active]: type == 'login' })} onClick={() => setType('login')}>登录</span>
+          <span className={cx({ [s.active]: type == 'register' })} onClick={() => setType('register')}>注册</span>
+        </div>
+        <div className={s.form}>
+          <Cell icon={<CustomIcon type="zhanghao" />}>
+            <Input
               clearable
-              type="password"
-              placeholder='请重复输入密码'
-              onChange={(value) => setVerify(value)}
+              type="text"
+              placeholder='请输入账号'
+              onChange={(value) => setUsername(value)}
             />
           </Cell>
-        )}
-        <div className={s.operation}>
-          {
-            type=="register" && (
-              <div className={s.agree}>
-                <Checkbox checked={agree} onChange={(value) => setAgree(value)} />
-                <label className="text-light">阅读并同意<a>《使用条款》</a></label>
-              </div>
-            )
-          }
-          <Button onClick={onSubmit} block theme="primary">{type=="login"?"登录":"注册"}</Button>
+          <Cell icon={<CustomIcon type="mima" />}>
+            <Input
+              clearable
+              type="password"
+              placeholder='请输入密码'
+              onChange={(value) => setPassword(value)}
+            />
+          </Cell>
+          {type == "register" && (
+            <Cell icon={<CustomIcon type="mima" />}>
+              <Input
+                clearable
+                type="password"
+                placeholder='请重复输入密码'
+                onChange={(value) => setVerify(value)}
+              />
+            </Cell>
+          )}
+          <div className={s.operation}>
+            {
+              type == "register" && (
+                <div className={s.agree}>
+                  <Checkbox checked={agree} onChange={(value) => setAgree(value)} />
+                  <label className="text-light">阅读并同意<a>《使用条款》</a></label>
+                </div>
+              )
+            }
+            <Button onClick={onSubmit} block theme="primary">{type == "login" ? "登录" : "注册"}</Button>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   )
 }
 
