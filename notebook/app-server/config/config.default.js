@@ -60,6 +60,11 @@ module.exports = appInfo => {
       port: 7002
     }
   };
+  config.cors = {
+    origin: '*', // 允许所有域名访问，或者指定特定域名，例如：'http://localhost:3000'
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH', // 允许的 HTTP 方法
+    credentials: true, // 是否允许发送 Cookie 和认证信息
+  }
 
   // add your user config here
   const userConfig = {
