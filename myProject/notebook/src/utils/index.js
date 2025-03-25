@@ -10,51 +10,67 @@ export const getUserInfo = async () => {
 
 export const typeMap = {
   1: {
-    icon: 'canyin'
+    icon: 'canyin',
+    name: '餐饮'
   },
   2: {
-    icon: 'fushi'
+    icon: 'fushi',
+    name: '服饰'
   },
   3: {
-    icon: 'jiaotong'
+    icon: 'jiaotong',
+    name: '交通'
   },
   4: {
-    icon: 'riyong'
+    icon: 'riyong',
+    name: '日用'
   },
   5: {
-    icon: 'gouwu'
+    icon: 'gouwu',
+    name: '购物'
   },
   6: {
-    icon: 'xuexi'
+    icon: 'xuexi',
+    name: '学习'
   },
   7: {
-    icon: 'yiliao'
+    icon: 'yiliao',
+    name: '医疗'
   },
   8: {
-    icon: 'lvxing'
+    icon: 'lvxing',
+    name: '旅行'
   },
   9: {
-    icon: 'renqing'
+    icon: 'songli',
+    name: '送礼'
   },
   10: {
-    icon: 'qita'
+    icon: 'qita',
+    name: '其他'
   },
   11: {
-    icon: 'gongzi'
+    icon: 'gongzi',
+    name: '工资'
   },
   12: {
-    icon: 'jiangjin'
+    icon: 'jiangjin',
+    name: '奖金'
   },
   13: {
-    icon: 'zhuanzhang'
+    icon: 'zhuanzhang',
+    name: '转账'
   },
   14: {
-    icon: 'licai'
+    icon: 'licai',
+    name: '理财'
   },
   15: {
-    icon: 'tuikuang'
+    icon: 'tuikuang',
+    name: '退款'
   },
   16: {
-    icon: 'qita'
+    icon: 'qita',
+    name: '其他'
   }
 }

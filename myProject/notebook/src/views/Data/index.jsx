@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Cell, Progress } from 'zarm';
 import s from './style.module.less';
 import CustomIcon from '@/components/CustomIcon';
 import { typeMap } from '@/utils';
 import Header from '@/components/Header';
+import * as echarts from 'echarts';
 
 
 const Data = () => {
@@ -11,6 +12,50 @@ const Data = () => {
   const [totalIncome, setTotalIncome] = useState(0);
   const [expenseData, setExpenseData] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
+  const pieChartRef = useRef(null);
+  const chartInstance = useRef(null);
+
+  const initPieChart = () => {
+    if (chartInstance.current) {
+      chartInstance.current.dispose();
+    }
+
+    const myChart = echarts.init(pieChartRef.current);
+    chartInstance.current = myChart;
+
+    const option = {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}: {c} ({d}%)'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['支出', '收入']
+      },
+      series: [
+        {
+          name: '收支情况',
+          type: 'pie',
+          radius: '55%',
+          center: ['50%', '60%'],
+          data: [
+            { value: totalExpense, name: '支出', itemStyle: { color: 'rgb(90, 198, 90)' } },
+            { value: totalIncome, name: '收入', itemStyle: { color: 'red' } }
+          ],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+
+    myChart.setOption(option);
+  };
 
   useEffect(() => {
     // 模拟数据，实际项目中应该从API获取
@@ -42,7 +87,10 @@ const Data = () => {
     setTotalIncome(income.reduce((acc, curr) => acc + curr.amount, 0));
     setExpenseData(expense);
     setIncomeData(income);
-  }, []);
+    initPieChart();
+  }, [totalExpense, totalIncome]);
+
+
 
   return (
     <>
@@ -96,6 +144,10 @@ const Data = () => {
             );
           })}
         </div>
+      </div>
+      <div className={s.pieChart}>
+        <div className={s.title}>收支占比</div>
+        <div ref={pieChartRef} className={s.chart}></div>
       </div>
     </div>
     </>
