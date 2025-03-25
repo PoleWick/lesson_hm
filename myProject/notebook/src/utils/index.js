@@ -72,5 +72,5 @@ export const typeMap = {
   16: {
     icon: 'qita',
     name: '其他'
-  }
+  },
 }

@@ -6,6 +6,7 @@ import UserInfo from '@/views/UserInfo'
 import Detail from '@/views/Detail'
 import ResetPassword from '@/views/ResetPassword'
 import About from '@/views/About'
+import Llm from '@/views/Llm'
 
 const routes = [
   {
@@ -40,6 +41,10 @@ const routes = [
     path:'/about',
     component: About
   },
+  {
+    path:'/llm',
+    component: Llm
+  }
   
 ]
 

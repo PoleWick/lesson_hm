@@ -33,6 +33,11 @@ const NavBar = ({ showNav }) => {
         icon={<CustomIcon type="tongji"/>}
       />
       <TabBar.Item
+        itemKey="/llm"
+        title="AI"
+        icon={<CustomIcon type="xuexi"/>}
+      />
+      <TabBar.Item
         itemKey="/user"
         title="我的"
         icon={<CustomIcon type="wode"/>}
