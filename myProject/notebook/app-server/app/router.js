@@ -26,4 +26,7 @@ module.exports = app => {
   router.patch('/bill/:id', _jwt, controller.bill.update) // 修改账单
   router.delete('/bill/:id',_jwt,controller.bill.delete) //
   router.get('/bill/:id', _jwt, controller.bill.detail) // 获取账单详情
+
+  // llm模块
+  router.post('/llm/chat', _jwt, controller.llm.chat) // 聊天
 };

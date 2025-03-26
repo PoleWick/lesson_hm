@@ -27,10 +27,10 @@ const Llm = () => {
         if (index >= content.length) {
           clearInterval(intervalId);
           callback?.();
-          return prev;
+          return prev || [];
         }
 
-        const newMessages = [...prev];
+        const newMessages = [...(prev || [])];
         const lastMessage = newMessages[newMessages.length - 1];
         if (lastMessage) {
           lastMessage.content = content.substring(0, index + 1);
@@ -74,7 +74,7 @@ const Llm = () => {
   // 消息处理
   const appendMessage = useCallback((role, content) => {
     setMessages(prev => {
-      const newMessages = [...prev];
+      const newMessages = [...(prev || [])];
       if (role === 'assistant') {
         newMessages.push({ role, content: '' });
       } else {
@@ -104,24 +104,28 @@ const Llm = () => {
         messages: [{ role: 'user', content: message }],
         temperature
       };
-      console.log('Request Body:', requestBody);
 
-      const response = await fetch(`${BASE_URL}/chat`, {
+      const response = await fetch(`${BASE_URL}/v1/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`
+          'Authorization': `Bearer ${API_KEY}`,
+          'Accept': 'application/json'
         },
         body: JSON.stringify(requestBody),
-        credentials: 'include' // 如果后端允许携带凭证，设置为 'include'
+        mode: 'cors',
+        credentials: 'include'
       });
 
-      console.log('Response Status:', response.status);
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('API Error:', errorData);
-        throw new Error(`API 请求失败，状态码: ${response.status}, 错误信息: ${JSON.stringify(errorData)}`);
+        try {
+          const errorData = await response.json();
+          console.error('API Error:', errorData);
+          throw new Error(`API 请求失败，状态码: ${response.status}, 错误信息: ${JSON.stringify(errorData)}`);
+        } catch (jsonError) {
+          throw new Error(`API 请求失败，状态码: ${response.status}, 无法解析错误信息`);
+        }
       }
 
       const responseData = await response.json();
@@ -144,7 +148,12 @@ const Llm = () => {
       setLoading(true);
 
       const response = await sendMessage(trimmedMessage);
-      appendMessage('assistant', response.message);
+      const assistantMessage = response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content;
+      if (assistantMessage) {
+        appendMessage('assistant', assistantMessage);
+      } else {
+        appendMessage('assistant', '抱歉，未获取到有效的回复');
+      }
     } catch (error) {
       appendMessage('assistant', '抱歉，暂时无法处理您的请求');
     } finally {
@@ -243,7 +252,7 @@ const Llm = () => {
 
   return (
     <>
-      <Header title="AI助手" showLeft={false} />
+      <Header title="AI助手" showLeft={true} />
       <div className={styles.chatContainer}>
         {/* 左侧聊天区域 */}
         <div className={styles.chatMain}>
@@ -377,5 +386,4 @@ const Llm = () => {
   );
 };
 
-export default Llm;
-    
+export default Llm;    

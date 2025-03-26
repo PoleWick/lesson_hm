@@ -3,7 +3,7 @@
   display: flex;
   height: 100vh;
   background-color: #fff;
-  padding-bottom: 40px;
+  padding-bottom: 120px;
   padding-top: 30px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px; 
@@ -109,10 +109,16 @@
 
 /* 输入区域 */
 .inputArea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   flex-shrink: 0;
-  padding: 15px 0;
+  padding: 15px;
+  background: white;
   border-top: 1px solid #e0e0e0;
+  z-index: 1000;
 
   textarea {
     flex: 1;
@@ -345,3 +351,8 @@
   }
 }
     
+.load{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
