@@ -10,6 +10,7 @@ const Home = () => {
   const [keyword, setKeyword] = useState('');
   const [showTypePopup, setShowTypePopup] = useState(false);
   const [showDatePopup, setShowDatePopup] = useState(false);
+  const [showAddBillPopup, setShowAddBillPopup] = useState(false); // 新增：控制添加账单弹出层显示
   const [selectedType, setSelectedType] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState('2024-12');
   const [originList, setOriginList] = useState([
@@ -145,6 +146,16 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, [keyword, selectedType, selectedMonth, originList]);
 
+  // 处理添加账单按钮点击事件
+  const handleAddBillClick = () => {
+    setShowAddBillPopup(true);
+  };
+
+  // 处理添加账单弹出层关闭事件
+  const handleAddBillClose = () => {
+    setShowAddBillPopup(false);
+  };
+
   return (
     <div className={s.home}>
       <div className={s.header}>
@@ -228,6 +239,55 @@ const Home = () => {
           list.map((item) => <BillItem key={item.date} bill={item}/>)
         }
       </div>
+      {/* 新增：悬浮添加账单按钮 */}
+      <button className={s.addBillButton} onClick={handleAddBillClick}>+</button>
+      {/* 新增：添加账单弹出层 */}
+      {showAddBillPopup && (
+        <div className={s.addBillPopup}>
+          <div className={s.popupBody}>
+            <div className={s.popupHeader}>添加账单</div>
+            <div className={s.popupClose} onClick={handleAddBillClose}>
+              <Icon type="wrong"/>
+            </div>
+            <div className={s.popupContent}>
+              {/* 选择账目的类型 */}
+              <div className={s.formItem}>
+                <label>账目的类型</label>
+                <select>
+                  <option value="餐饮">餐饮</option>
+                  <option value="学习">学习</option>
+                  {/* 可根据需求添加更多类型 */}
+                </select>
+              </div>
+              {/* 设置收入还是支出 */}
+              <div className={s.formItem}>
+                <label>收支类型</label>
+                <select>
+                  <option value="1">支出</option>
+                  <option value="2">收入</option>
+                </select>
+              </div>
+              {/* 输入金额 */}
+              <div className={s.formItem}>
+                <label>金额</label>
+                <input type="number" placeholder="请输入金额" />
+              </div>
+              {/* 设置时间 */}
+              <div className={s.formItem}>
+                <label>时间</label>
+                <input type="date" />
+              </div>
+              {/* 添加备注 */}
+              <div className={s.formItem}>
+                <label>备注</label>
+                <textarea placeholder="请添加备注" />
+              </div>
+              {/* 提交按钮 */}
+              <button className={s.submitButton}>提交</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

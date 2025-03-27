@@ -73,4 +73,8 @@ export const typeMap = {
     icon: 'qita',
     name: '其他'
   },
+  17: {
+    icon: 'jia',
+    name: '加号'
+  }
 }
