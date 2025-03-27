@@ -4,29 +4,61 @@ const axios = require('axios');
 
 class LLMController extends Controller {
   async chat() {
-    const { ctx } = this;
-    const { messages } = ctx.request.body;
+    const { ctx, app } = this;
+    const { messages, model, temperature } = ctx.request.body;
+
+    // 参数验证
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      ctx.status = 400;
+      ctx.body = { error: '消息格式不正确', code: 400 };
+      return;
+    }
 
     try {
-      // 调用第三方大语言模型API（示例为OpenAI）
+      const { baseURL, apiKey, defaultModel, defaultTemperature } = app.config.llm;
+
+      if (!apiKey) {
+        ctx.status = 500;
+        ctx.body = { error: 'API密钥未配置', code: 500 };
+        return;
+      }
+
+      // 调用Deepseek API
       const response = await axios.post(
-        'https://api.deepseek.com',
+        `${baseURL}/chat/completions`,
         {
-          model: 'deepseek-chat',
-          messages: messages,
+          model: model || defaultModel,
+          messages,
+          temperature: temperature || defaultTemperature
         },
         {
           headers: {
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`, // 从环境变量获取密钥
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
           },
+          timeout: 30000 // 30秒超时
         }
       );
 
-      ctx.body = response.data;
+      // 格式化响应
+      ctx.body = {
+        code: 200,
+        message: response.data.choices[0]?.message?.content || '',
+        data: response.data
+      };
     } catch (error) {
-      ctx.status = error.response?.status || 500;
-      ctx.body = { error: error.message };
+      console.error('LLM API Error:', error.response?.data || error.message);
+      
+      // 错误处理
+      const status = error.response?.status || 500;
+      const errorMessage = error.response?.data?.error || error.message;
+      
+      ctx.status = status;
+      ctx.body = {
+        code: status,
+        error: errorMessage,
+        message: '请求失败，请稍后重试'
+      };
     }
   }
 }

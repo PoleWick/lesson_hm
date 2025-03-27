@@ -43,11 +43,11 @@ const Detail = () => {
 
 
     return (
-        <div className={s.detail}>
+        <article className={s.detail}>
             <Header title="账单详情" />
-            <div className={s.contentWrap}>
-                <div className={s.card}>
-                    <div className={s.type}>
+            <main className={s.contentWrap}>
+                <section className={s.card}>
+                    <header className={s.type}>
                         <span className={cx({
                             [s.expense]: detail?.pay_type === 1,
                             [s.income]: detail?.pay_type === 2
@@ -55,33 +55,38 @@ const Detail = () => {
                             <CustomIcon
                                 className={s.iconfont}
                                 type={typeMap[detail?.type_id]?.icon || 'qita'}
+                                aria-hidden="true"
                             />
                         </span>
-                        <span>{typeMap[detail?.type_id]?.name || '-'}</span>
-                    </div>
-                    <div className={s.amount}>
-                        <span className={s.title}>金额</span>
-                        <span>{detail.pay_type === 1 ? '-' : '+'}{detail.amount || '-'}</span>
-                    </div>
-                    <div className={s.date}>
-                        <span className={s.title}>日期</span>
-                        <span>{detail.date || '-'}</span>
-                    </div>
-                    <div className={s.remark}>
-                        <span className={s.title}>备注</span>
-                        <span>{detail.remark || '-'}</span>
-                    </div>
-                    <div className={s.operation}>
-                        <span onClick={() => { }}>
-                            <CustomIcon type="sc" /> 删除
-                        </span>
-                        <span onClick={() => { }}>
-                            <CustomIcon type="bianji" /> 编辑
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        <h1>{typeMap[detail?.type_id]?.name || '-'}</h1>
+                    </header>
+
+                    <dl className={s.amount}>
+                        <dt className={s.title}>金额</dt>
+                        <dd>{detail.pay_type === 1 ? '-' : '+'}{detail.amount || '-'}</dd>
+                    </dl>
+
+                    <dl className={s.date}>
+                        <dt className={s.title}>日期</dt>
+                        <dd>{detail.date || '-'}</dd>
+                    </dl>
+
+                    <dl className={s.remark}>
+                        <dt className={s.title}>备注</dt>
+                        <dd>{detail.remark || '-'}</dd>
+                    </dl>
+
+                    <footer className={s.operation}>
+                        <button onClick={() => { }} className={s.operationBtn}>
+                            删除
+                        </button>
+                        <button onClick={() => { }} className={s.operationBtn}>
+                            编辑
+                        </button>
+                    </footer>
+                </section>
+            </main>
+        </article>
     )
 }
 

@@ -13,7 +13,6 @@ const Home = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState('2024-12');
   const [originList, setOriginList] = useState([
-    
     {
       date: '2024-12-20',
       bills: [
@@ -83,7 +82,7 @@ const Home = () => {
 
   // 账单类型列表
   const typeList = [
-    { id: 'all', name: '全部类型' },
+    { id: null, name: '全部类型' },
     { id: 1, name: '支出' },
     { id: 2, name: '收入' }
   ];
@@ -121,7 +120,7 @@ const Home = () => {
   useEffect(() => {
     // 防抖处理
     const timer = setTimeout(() => {
-      if (!keyword.length) {
+      if (!keyword.length && !selectedType && selectedMonth === '2024-12') {
         setList(originList);
         return;
       }
@@ -134,8 +133,8 @@ const Home = () => {
             bill.type_name.toLowerCase().includes(keyword.toLowerCase()) ||
             amountStr.toLowerCase().includes(keyword.toLowerCase()) ||
             (bill.remark && bill.remark.toLowerCase().includes(keyword.toLowerCase()));
-          const matchType = !selectedType || selectedType === 'all' || bill.pay_type === selectedType;
-          const matchMonth = !selectedMonth || bill.date.startsWith(selectedMonth);
+          const matchType = !selectedType || bill.pay_type === selectedType;
+          const matchMonth = bill.date.startsWith(selectedMonth);
           return matchKeyword && matchType && matchMonth;
         });
         return filteredBills.length ? { ...item, bills: filteredBills } : null;

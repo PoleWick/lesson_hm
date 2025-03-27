@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import styles from './style.module.less';
 import Header from '@/components/Header';
+import { chatWithLLM } from '@/api/llm';
 
 const MESSAGE_LIMIT = 50;
-// 修改为使用 import.meta.env
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const API_KEY = import.meta.env.VITE_API_KEY;
+// 后端API地址
+const API_URL = '/api/llm';
 
 const Llm = () => {
   const [messages, setMessages] = useState([]);
@@ -22,22 +21,23 @@ const Llm = () => {
   // 消息处理逻辑
   const typeMessage = useCallback((content, callback) => {
     let index = 0;
+    const chunkSize = 5; // 批量更新的字符数
     const intervalId = setInterval(() => {
+      if (index >= content.length) {
+        clearInterval(intervalId);
+        callback?.();
+        return;
+      }
+      const endIndex = Math.min(index + chunkSize, content.length);
       setMessages(prev => {
-        if (index >= content.length) {
-          clearInterval(intervalId);
-          callback?.();
-          return prev || [];
-        }
-
-        const newMessages = [...(prev || [])];
+        const newMessages = [...prev];
         const lastMessage = newMessages[newMessages.length - 1];
         if (lastMessage) {
-          lastMessage.content = content.substring(0, index + 1);
+          lastMessage.content = content.substring(0, endIndex);
         }
         return newMessages;
       });
-      index++;
+      index = endIndex;
     }, 50);
   }, []);
 
@@ -74,7 +74,7 @@ const Llm = () => {
   // 消息处理
   const appendMessage = useCallback((role, content) => {
     setMessages(prev => {
-      const newMessages = [...(prev || [])];
+      const newMessages = [...prev];
       if (role === 'assistant') {
         newMessages.push({ role, content: '' });
       } else {
@@ -99,43 +99,17 @@ const Llm = () => {
   // API通信
   const sendMessage = useCallback(async (message) => {
     try {
-      const requestBody = {
+      const response = await chatWithLLM(
+        [...messages, { role: 'user', content: message }],
         model,
-        messages: [{ role: 'user', content: message }],
         temperature
-      };
-
-      const response = await fetch(`${BASE_URL}/v1/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`,
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(requestBody),
-        mode: 'cors',
-        credentials: 'include'
-      });
-
-
-      if (!response.ok) {
-        try {
-          const errorData = await response.json();
-          console.error('API Error:', errorData);
-          throw new Error(`API 请求失败，状态码: ${response.status}, 错误信息: ${JSON.stringify(errorData)}`);
-        } catch (jsonError) {
-          throw new Error(`API 请求失败，状态码: ${response.status}, 无法解析错误信息`);
-        }
-      }
-
-      const responseData = await response.json();
-      console.log('Response Data:', responseData);
-      return responseData;
+      );
+      return response;
     } catch (error) {
       console.error('API请求失败:', error);
       throw error;
     }
-  }, [BASE_URL, API_KEY, model, temperature]);
+  }, [model, temperature, messages]);
 
   // 事件处理
   const handleSendMessage = useCallback(async () => {
@@ -148,14 +122,11 @@ const Llm = () => {
       setLoading(true);
 
       const response = await sendMessage(trimmedMessage);
-      const assistantMessage = response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content;
-      if (assistantMessage) {
-        appendMessage('assistant', assistantMessage);
-      } else {
-        appendMessage('assistant', '抱歉，未获取到有效的回复');
-      }
+      const assistantMessage = response.message || '抱歉，暂时无法获取回复';
+      appendMessage('assistant', assistantMessage);
     } catch (error) {
       appendMessage('assistant', '抱歉，暂时无法处理您的请求');
+      saveChatLog('assistant', '抱歉，暂时无法处理您的请求'); // 保存错误消息
     } finally {
       setLoading(false);
     }
@@ -179,7 +150,7 @@ const Llm = () => {
 
       const history = JSON.parse(localStorage.getItem('chatHistory')) || [];
       const newHistory = [...history, {
-        name: `对话 ${history.length + 1} (${new Date().toLocaleString()})`,
+        name: `对话 ${history.length + 1} (${new Date().toISOString()})`,
         messages: chatLog
       }];
 
@@ -252,7 +223,7 @@ const Llm = () => {
 
   return (
     <>
-      <Header title="AI助手" showLeft={true} />
+      <Header title="AI助手" showLeft={false} />
       <div className={styles.chatContainer}>
         {/* 左侧聊天区域 */}
         <div className={styles.chatMain}>
@@ -348,6 +319,8 @@ const Llm = () => {
                     max="1.5"
                     step="0.1"
                   />
+                </div>
+                <div className={styles.settingItem}>
                   <label>模式选择:</label>
                   <select
                     value={model}
@@ -386,4 +359,4 @@ const Llm = () => {
   );
 };
 
-export default Llm;    
+export default Llm;

@@ -3,15 +3,15 @@
   display: flex;
   height: 100vh;
   background-color: #fff;
-  padding-bottom: 120px;
-  padding-top: 30px;
+  padding-bottom: 100px; /* 增加底部内边距，假设底部导航高度为 60px，加上一些额外空间 */
+  padding-top: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px; 
 
   @media (max-width: 768px) {
     flex-direction: column;
     min-height: 100vh;
-    padding-top: 60px;
+    padding-top: 45px;
   }
 }
 
@@ -21,14 +21,11 @@
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  border-right: 1px solid #e0e0e0;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   position: relative;
 
   @media (max-width: 768px) {
     border-right: none;
-    border-bottom: 1px solid #e0e0e0;
     padding: 15px;
     min-height: 60vh;
   }
@@ -37,6 +34,7 @@
 /* 聊天记录区域 */
 .chatLog {
   flex: 1;
+  padding-bottom: 170px; /* 增加底部内边距，确保内容不被输入框遮挡 */
   &::-webkit-scrollbar {
     width: 8px;
     &-track {
@@ -109,16 +107,16 @@
 
 /* 输入区域 */
 .inputArea {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   flex-shrink: 0;
-  padding: 15px;
-  background: white;
+  padding: 15px 20px; /* 增加左右内边距，与聊天区域保持一致 */
   border-top: 1px solid #e0e0e0;
-  z-index: 1000;
+  position: fixed;
+  bottom: 45px; /* 调整底部距离，避免遮挡内容 */
+  left: 0;
+  right: 0;
+  z-index: 10; /* 确保输入框在内容之上 */
+  background-color: #fff; /* 确保输入区域背景颜色与聊天区域一致 */
 
   textarea {
     flex: 1;
@@ -171,7 +169,7 @@
 .backToTop {
   position: absolute;
   right: 20px;
-  bottom: 100px; /* 确保回到顶部按钮不会被底部导航栏遮挡 */
+  bottom: 140px; /* 调整按钮位置，避免被输入区域遮挡 */
   background: #007aff;
   width: 40px;
   height: 40px;
@@ -191,7 +189,7 @@
 
   @media (max-width: 768px) {
     right: 15px;
-    bottom: 90px;
+    bottom: 130px;
     width: 35px;
     height: 35px;
   }
@@ -303,24 +301,34 @@
 
   .conversationList {
     .convItem {
-      padding: 10px;
-      transition: background 0.2s;
-      border-radius: 4px;
-      font-size: 14px; 
+      padding: 12px;
+      transition: all 0.2s ease;
+      border-radius: 6px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
 
       &:hover {
-        background: #e9ecef;
+        background: #f8f9fa;
+        border-color: #e9ecef;
       }
 
       .deleteButton {
         color: #dc3545;
         background: none;
         border: none;
-        font-size: 18px; 
+        font-size: 18px;
         margin-left: 10px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
 
         &:hover {
-          color: #c82333;
+          color: #fff;
+          background: #dc3545;
         }
       }
       button {
@@ -349,9 +357,4 @@
     max-height: 90vh;
     overflow-y: auto;
   }
-}
-    
-.loading{
-  display: grid;
-  justify-content: center; 
 }

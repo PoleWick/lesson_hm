@@ -40,7 +40,7 @@ const BillForm = ({ onSubmit, initialValues = {} }) => {
             options={typeOptions}
           />
         </Form.Item>
-
+        
         <Form.Item label="金额" name="amount">
           <Input 
             type="number"
