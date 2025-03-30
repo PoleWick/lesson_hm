@@ -27,7 +27,7 @@ class LLMController extends Controller {
       const response = await axios.post(
         `${baseURL}/chat/completions`,
         {
-          model: model || defaultModel,
+          model:'deepseek-chat',
           messages,
           temperature: temperature || defaultTemperature
         },

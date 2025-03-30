@@ -1,12 +1,22 @@
-/* 整体容器 */
+// 定义常用变量
+@primary-color: #007aff;
+@secondary-color: #f0f6ff;
+@background-color: #fff;
+@border-color: #e0e0e0;
+@text-color: #333;
+@border-radius: 4px;
+@font-size: 14px;
+@bottom-nav-height: 60px;
+@extra-space: 40px;
+
 .chatContainer {
   display: flex;
   height: 100vh;
-  background-color: #fff;
-  padding-bottom: 100px; /* 增加底部内边距，假设底部导航高度为 60px，加上一些额外空间 */
+  background-color: @background-color;
+  padding-bottom: (@bottom-nav-height + @extra-space);
   padding-top: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px; 
+  font-size: @font-size; 
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -15,12 +25,11 @@
   }
 }
 
-/* 左侧聊天区域 */
 .chatMain {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background-color: @background-color;
   padding: 20px;
   position: relative;
 
@@ -31,10 +40,9 @@
   }
 }
 
-/* 聊天记录区域 */
 .chatLog {
   flex: 1;
-  padding-bottom: 170px; /* 增加底部内边距，确保内容不被输入框遮挡 */
+  padding-bottom: 170px; 
   &::-webkit-scrollbar {
     width: 8px;
     &-track {
@@ -50,7 +58,6 @@
   }
 }
 
-/* 消息项 */
 .message {
   margin-bottom: 15px;
   max-width: 90%;
@@ -60,30 +67,30 @@
   }
 }
 
-/* 消息气泡 */
 .bubble {
   padding: 12px 18px;
   border-radius: 20px;
   line-height: 1.5;
   word-break: break-word;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 14px; 
+  font-size: @font-size; 
   position: relative;
+  transition: all 0.3s ease; /* 添加过渡效果 */
 
   &.user {
-    background-color: #007aff;
+    background-color: @primary-color;
     color: white;
     align-self: flex-end;
   }
 
   &.assistant {
-    background-color: #f0f6ff;
-    color: #333;
+    background-color: @secondary-color;
+    color: @text-color;
   }
 
   @media (max-width: 768px) {
     padding: 10px 15px;
-    font-size: 14px;
+    font-size: @font-size;
   }
 }
 
@@ -94,7 +101,7 @@
   background: rgba(0, 0, 0, 0.3);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: @border-radius;
   padding: 2px 5px;
   font-size: 12px;
   opacity: 0;
@@ -105,47 +112,46 @@
   }
 }
 
-/* 输入区域 */
 .inputArea {
   display: flex;
   flex-shrink: 0;
-  padding: 15px 20px; /* 增加左右内边距，与聊天区域保持一致 */
-  border-top: 1px solid #e0e0e0;
+  padding: 15px 20px; 
+  border-top: 1px solid @border-color;
   position: fixed;
-  bottom: 50px; /* 调整底部距离，避免遮挡内容 */
+  bottom: 50px; 
   left: 0;
   right: 0;
-  z-index: 10; /* 确保输入框在内容之上 */
-  background-color: #fff; /* 确保输入区域背景颜色与聊天区域一致 */
+  z-index: 10; 
+  background-color: @background-color; 
 
   textarea {
     flex: 1;
     resize: none;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: @border-radius;
     height: 80px;
-    font-size: 14px; 
+    font-size: @font-size; 
 
     &:focus {
-      border-color: #007aff;
+      border-color: @primary-color;
       box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.25);
       outline: none;
     }
   }
 
   .sendButton {
-    background: #007aff;
+    background: @primary-color;
     color: white;
     transition: background 0.2s;
     border: none;
-    border-radius: 4px;
+    border-radius: @border-radius;
     padding: 8px 15px; 
     margin-left: 10px;
-    font-size: 14px; 
+    font-size: @font-size; 
 
     &:hover {
-      background: #0056b3;
+      background: darken(@primary-color, 20%);
     }
     &:disabled {
       background: #6c757d;
@@ -165,51 +171,22 @@
   }
 }
 
-/* 返回顶部按钮 */
-.backToTop {
-  position: absolute;
-  right: 20px;
-  bottom: 140px; /* 调整按钮位置，避免被输入区域遮挡 */
-  background: #007aff;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  transition: transform 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 24px; 
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  display: none;
 
-  &:hover {
-    transform: scale(1.1);
-  }
 
-  @media (max-width: 768px) {
-    right: 15px;
-    bottom: 130px;
-    width: 35px;
-    height: 35px;
-  }
-}
-
-/* 移动端设置触发按钮 */
 .mobileSettingsButton {
-  position: fixed; /* 使用 fixed 定位，使其悬浮在页面上 */
-  top: 50px; /* 距离页面顶部 20px */
-  right: 10px; /* 距离页面左侧 20px */
-  background: #007aff;
+  position: fixed; 
+  top: 50px; 
+  right: 10px; 
+  background: @primary-color;
   color: white;
   transition: background 0.2s;
   border: none;
-  border-radius: 4px;
+  border-radius: @border-radius;
   padding: 8px 15px; 
-  font-size: 14px; 
+  font-size: @font-size; 
 
   &:hover {
-    background: #0056b3;
+    background: darken(@primary-color, 20%);
   }
 
   @media (max-width: 768px) {
@@ -218,7 +195,6 @@
   }
 }
 
-/* 移动端设置弹出层 */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -229,6 +205,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 0; /* 初始透明度为 0 */
+  visibility: hidden; /* 初始不可见 */
+  transition: all 0.3s ease; /* 添加过渡效果 */
+
+  &.active {
+    opacity: 1; /* 显示时透明度为 1 */
+    visibility: visible; /* 显示时可见 */
+  }
 }
 
 .settingsModal {
@@ -238,7 +222,7 @@
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  font-size: 14px; 
+  font-size: @font-size; 
   display: flex;
   flex-direction: column;
 
@@ -256,7 +240,7 @@
       background: none;
       border: none;
       font-size: 24px;
-      color: #333;
+      color: @text-color;
       cursor: pointer;
 
       &:hover {
@@ -269,17 +253,17 @@
     margin-bottom: 15px;
 
     button {
-      background: #007aff;
+      background: @primary-color;
       color: white;
       transition: background 0.2s;
       border: none;
-      border-radius: 4px;
+      border-radius: @border-radius;
       padding: 8px 15px; 
-      font-size: 14px; 
+      font-size: @font-size; 
       margin-right: 10px;
 
       &:hover {
-        background: #0056b3;
+        background: darken(@primary-color, 20%);
       }
     }
 
@@ -288,11 +272,11 @@
       width: 100%;
       padding: 10px;
       border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px; 
+      border-radius: @border-radius;
+      font-size: @font-size; 
 
       &:focus {
-        border-color: #007aff;
+        border-color: @primary-color;
         box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.25);
         outline: none;
       }
@@ -304,7 +288,7 @@
       padding: 12px;
       transition: all 0.2s ease;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: @font-size;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -323,7 +307,7 @@
         font-size: 18px;
         margin-left: 10px;
         padding: 4px 8px;
-        border-radius: 4px;
+        border-radius: @border-radius;
         transition: all 0.2s ease;
 
         &:hover {
@@ -332,16 +316,16 @@
         }
       }
       button {
-        background: #007aff;
+        background: @primary-color;
         color: white;
         transition: background 0.2s;
         border: none;
-        border-radius: 4px;
+        border-radius: @border-radius;
         padding: 6px 12px; 
-        font-size: 14px; 
+        font-size: @font-size; 
 
         &:hover {
-          background: #0056b3;
+          background: darken(@primary-color, 20%);
         }
       }
     }
@@ -358,3 +342,4 @@
     overflow-y: auto;
   }
 }
+

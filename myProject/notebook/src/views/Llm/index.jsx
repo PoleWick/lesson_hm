@@ -17,6 +17,7 @@ const Llm = () => {
   const [temperature, setTemperature] = useState(0.7);
   const [model, setModel] = useState('deepseek-chat');
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   // 消息处理逻辑
   const typeMessage = useCallback((content, callback) => {
@@ -184,16 +185,17 @@ const Llm = () => {
   // 滚动处理
   useEffect(() => {
     const handleScroll = () => {
-      if (backToTopRef.current && chatLogRef.current) {
-        backToTopRef.current.style.display = chatLogRef.current.scrollTop > 300
-          ? 'block'
-          : 'none';
+      if (chatLogRef.current) {
+        const shouldShow = chatLogRef.current.scrollTop > 300;
+        setShowBackToTop(shouldShow);
       }
     };
 
     const currentRef = chatLogRef.current;
     if (currentRef) {
       currentRef.addEventListener('scroll', handleScroll);
+      // 初始检查
+      handleScroll();
       return () => {
         currentRef.removeEventListener('scroll', handleScroll);
       };
@@ -225,6 +227,7 @@ const Llm = () => {
     <>
       <Header title="AI助手" showLeft={false} />
       <div className={styles.chatContainer}>
+       
         {/* 左侧聊天区域 */}
         <div className={styles.chatMain}>
           <div ref={chatLogRef} className={styles.chatLog}>
@@ -266,21 +269,12 @@ const Llm = () => {
             </button>
           </div>
 
-          <button
-            ref={backToTopRef}
-            className={styles.backToTop}
-            onClick={() => {
-              if (chatLogRef.current) {
-                chatLogRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-            aria-label="回到顶部"
-          >
-            ↑
-          </button>
+
 
           <button
-            onClick={() => setShowSettingsModal(true)}
+            onClick={() => {
+              setShowSettingsModal(true);
+            }}
             className={styles.mobileSettingsButton}
           >
             设置
@@ -289,7 +283,7 @@ const Llm = () => {
 
         {/* 移动端设置弹出层 */}
         {showSettingsModal && (
-          <div className={styles.modalOverlay} onClick={() => setShowSettingsModal(false)}>
+          <div className={`${styles.modalOverlay} ${showSettingsModal ? styles.active : ''}`} onClick={() => setShowSettingsModal(false)}>
             <div className={styles.settingsModal} onClick={(e) => e.stopPropagation()}>
               <div className={styles.modalHeader}>
                 <h3>模型设置</h3>
