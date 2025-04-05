@@ -5,7 +5,7 @@
       <div class="flex items-center">
         <img src="../assets/icons8-推特.gif" alt="logo" class="w-10 h-10 mr-4">
         <!-- <MorphingText :texts="texts" /> -->
-        <h1 class="text-2xl font-bold">言无止境</h1>
+        <h1 class="text-2xl font-bold">Love and Share</h1>
       </div>
       <!-- 留言墙和照片墙切换 -->
       <div class="flex items-center space-x-4">

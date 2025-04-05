@@ -1,50 +1,46 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 // 加载环境变量
 dotenv.config();
 
-// 获取JWT配置
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || 'accessTokenSecret';
-const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || 'refreshTokenSecret';
-const accessTokenExpire = process.env.ACCESS_TOKEN_EXPIRE || '1h';
-const refreshTokenExpire = process.env.REFRESH_TOKEN_EXPIRE || '7d';
+// 令牌配置
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret_key';
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh_secret_key';
+const ACCESS_TOKEN_EXPIRY = '15m'; // 15分钟
+const REFRESH_TOKEN_EXPIRY = '7d'; // 7天
+const TOKEN_EXPIRY_WARNING = 5 * 60; // 令牌过期前5分钟开始警告
 
-// Token载荷接口
+// 令牌有效载荷接口
 export interface TokenPayload {
   id: string;
   username: string;
-  role?: string;
+  role: string;
+  iat?: number;
+  exp?: number;
 }
 
 /**
- * 生成访问令牌
- * @param payload 令牌载荷
- * @returns 生成的JWT访问令牌
+ * 生成访问令牌和刷新令牌
  */
-export const generateAccessToken = (payload: TokenPayload): string => {
-  const options: SignOptions = { expiresIn: accessTokenExpire };
-  return jwt.sign(payload, accessTokenSecret, options);
-};
-
-/**
- * 生成刷新令牌
- * @param payload 令牌载荷
- * @returns 生成的JWT刷新令牌
- */
-export const generateRefreshToken = (payload: TokenPayload): string => {
-  const options: SignOptions = { expiresIn: refreshTokenExpire };
-  return jwt.sign(payload, refreshTokenSecret, options);
+export const generateTokens = (payload: TokenPayload) => {
+  const accessToken = jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
+  const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRY });
+  
+  return {
+    accessToken,
+    refreshToken,
+    expiresIn: ACCESS_TOKEN_EXPIRY
+  };
 };
 
 /**
  * 验证访问令牌
- * @param token JWT访问令牌
- * @returns 解码后的载荷或null（如果验证失败）
  */
 export const verifyAccessToken = (token: string): TokenPayload | null => {
   try {
-    return jwt.verify(token, accessTokenSecret) as TokenPayload;
+    const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as TokenPayload;
+    return decoded;
   } catch (error) {
     console.error('访问令牌验证失败:', error);
     return null;
@@ -53,12 +49,11 @@ export const verifyAccessToken = (token: string): TokenPayload | null => {
 
 /**
  * 验证刷新令牌
- * @param token JWT刷新令牌
- * @returns 解码后的载荷或null（如果验证失败）
  */
 export const verifyRefreshToken = (token: string): TokenPayload | null => {
   try {
-    return jwt.verify(token, refreshTokenSecret) as TokenPayload;
+    const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET) as TokenPayload;
+    return decoded;
   } catch (error) {
     console.error('刷新令牌验证失败:', error);
     return null;
@@ -66,13 +61,21 @@ export const verifyRefreshToken = (token: string): TokenPayload | null => {
 };
 
 /**
- * 为用户生成访问令牌和刷新令牌
- * @param payload 用户信息载荷
- * @returns 包含访问令牌和刷新令牌的对象
+ * 检查访问令牌是否接近过期
+ * 如果距离过期不到5分钟，返回true
  */
-export const generateTokens = (payload: TokenPayload) => {
-  return {
-    accessToken: generateAccessToken(payload),
-    refreshToken: generateRefreshToken(payload)
-  };
+export const isAccessTokenNearExpiry = (token: string): boolean => {
+  try {
+    const decoded = jwt.decode(token) as { exp?: number };
+    if (!decoded || !decoded.exp) return false;
+    
+    const expiryTime = decoded.exp * 1000; // 转换为毫秒
+    const currentTime = Date.now();
+    const timeToExpiry = expiryTime - currentTime;
+    
+    return timeToExpiry > 0 && timeToExpiry < TOKEN_EXPIRY_WARNING * 1000;
+  } catch (error) {
+    console.error('检查令牌过期失败:', error);
+    return false;
+  }
 }; 

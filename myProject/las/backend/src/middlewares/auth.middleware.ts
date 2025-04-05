@@ -1,133 +1,220 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
-import { verifyAccessToken } from '../utils/jwt.utils';
-import { error } from '../utils/apiResponse';
+
+// 令牌配置
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access_secret_key';
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh_secret_key';
 
 // 扩展Request接口，添加user属性
 declare global {
   namespace Express {
     interface Request {
       user?: {
-        id: number;
+        id: string;
         username: string;
+        role: string;
+        tokenNearExpiry?: boolean;
       };
     }
   }
 }
 
 /**
- * 验证请求头中的JWT令牌
- * 如果有效，将解码后的用户信息添加到req.user
+ * 验证JWT令牌并将用户信息附加到请求对象
  */
-export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
-    // 从请求头获取Authorization
+    // 从请求头获取令牌
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      return error(res, '未提供访问令牌', 401);
+      res.status(401).json({
+        success: false,
+        message: '未提供授权令牌'
+      });
+      return;
     }
 
     // 检查令牌格式
     const parts = authHeader.split(' ');
     if (parts.length !== 2 || parts[0] !== 'Bearer') {
-      return error(res, '访问令牌格式无效', 401);
+      res.status(401).json({
+        success: false,
+        message: '授权令牌格式无效'
+      });
+      return;
     }
 
     const token = parts[1];
-    const payload = verifyAccessToken(token);
-    
+
+    // 验证令牌
+    const payload = jwt.verify(token, ACCESS_TOKEN_SECRET) as any;
     if (!payload) {
-      return error(res, '访问令牌无效或已过期', 401);
+      res.status(401).json({
+        success: false,
+        message: '无效或过期的令牌'
+      });
+      return;
     }
 
-    // 将用户信息添加到请求对象
-    (req as any).user = payload;
-    
+    // 验证用户是否存在
+    const user = await User.findByPk(parseInt(payload.id, 10));
+    if (!user) {
+      res.status(401).json({
+        success: false,
+        message: '用户不存在'
+      });
+      return;
+    }
+
+    // 将用户信息附加到请求对象
+    req.user = {
+      id: payload.id,
+      username: payload.username,
+      role: payload.role || 'user',
+      tokenNearExpiry: false
+    };
+
     // 继续下一个中间件
     next();
-  } catch (err) {
-    console.error('令牌验证失败:', err);
-    return error(res, '令牌验证失败', 401);
+  } catch (error) {
+    console.error('令牌验证失败:', error);
+    res.status(500).json({
+      success: false,
+      message: '服务器错误，令牌验证失败'
+    });
+    return;
   }
 };
 
 /**
- * 可选的令牌验证
- * 如果令牌有效，将用户信息添加到req.user
- * 如果没有令牌或令牌无效，仍然继续处理请求
+ * 可选令牌验证 - 如果令牌存在则验证，不存在则继续
  */
-export const optionalToken = (req: Request, res: Response, next: NextFunction) => {
+export const optionalToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
-    // 从请求头获取Authorization
+    // 从请求头获取令牌
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      return next();
+      next();
+      return;
     }
 
     // 检查令牌格式
     const parts = authHeader.split(' ');
     if (parts.length !== 2 || parts[0] !== 'Bearer') {
-      return next();
+      next();
+      return;
     }
 
     const token = parts[1];
-    const payload = verifyAccessToken(token);
-    
-    if (payload) {
-      // 将用户信息添加到请求对象
-      (req as any).user = payload;
+
+    // 验证令牌
+    const payload = jwt.verify(token, ACCESS_TOKEN_SECRET) as any;
+    if (!payload) {
+      next();
+      return;
     }
-    
+
+    // 将用户信息附加到请求对象
+    req.user = {
+      id: payload.id,
+      username: payload.username,
+      role: payload.role || 'user',
+      tokenNearExpiry: false
+    };
+
     // 继续下一个中间件
     next();
-  } catch (err) {
-    // 即使验证失败也继续处理请求
+  } catch (error) {
+    // 忽略错误，继续下一个中间件
     next();
   }
 };
 
-// 验证刷新令牌
-export const verifyRefreshToken = (req: Request, res: Response, next: NextFunction) => {
+/**
+ * 验证刷新令牌中间件
+ */
+export const verifyRefreshToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   try {
     const refreshToken = req.body.refreshToken;
     if (!refreshToken) {
-      return res.status(401).json({ message: '未提供刷新令牌' });
+      res.status(401).json({ 
+        success: false,
+        message: '未提供刷新令牌' 
+      });
+      return;
     }
 
-    const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || 'refreshTokenSecret';
+    // 验证刷新令牌
+    const payload = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET) as any;
+    if (!payload) {
+      res.status(401).json({ 
+        success: false,
+        message: '无效或已过期的刷新令牌' 
+      });
+      return;
+    }
 
-    jwt.verify(refreshToken, refreshTokenSecret, (err: jwt.VerifyErrors | null, decoded: any) => {
-      if (err) {
-        return res.status(401).json({ message: '无效的刷新令牌' });
-      }
-
-      // 将解码后的用户信息添加到请求对象
-      req.user = decoded as { id: number; username: string };
-      next();
-    });
+    // 将用户信息添加到请求对象
+    req.user = {
+      id: payload.id,
+      username: payload.username,
+      role: payload.role || 'user'
+    };
+    
+    next();
   } catch (error) {
     console.error('验证刷新令牌错误:', error);
-    return res.status(500).json({ message: '服务器错误，请稍后再试' });
+    res.status(500).json({ 
+      success: false,
+      message: '服务器错误，请稍后再试' 
+    });
+    return;
   }
 };
 
-// 验证管理员权限
-export const verifyAdmin = async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * 验证管理员权限
+ */
+export const verifyAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const userId = req.user?.id;
     if (!userId) {
-      return res.status(401).json({ message: '未授权，请先登录' });
+      res.status(401).json({ 
+        success: false,
+        message: '未授权，请先登录' 
+      });
+      return;
     }
 
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(parseInt(userId, 10));
     if (!user || user.role !== 'admin') {
-      return res.status(403).json({ message: '无权限，需要管理员权限' });
+      res.status(403).json({ 
+        success: false,
+        message: '无权限，需要管理员权限' 
+      });
+      return;
     }
 
     next();
   } catch (error) {
     console.error('验证管理员权限错误:', error);
-    return res.status(500).json({ message: '服务器错误，请稍后再试' });
+    res.status(500).json({ 
+      success: false,
+      message: '服务器错误，请稍后再试' 
+    });
+    return;
   }
 }; 

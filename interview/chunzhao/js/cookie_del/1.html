@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 删除cookie
+        function delCookie(name) {
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            document.cookie = name + "=; expires=" + exp.toUTCString() + "; path=/";
+        }
+
+        // 测试删除cookie
+        document.cookie = "test=123; path=/";
+        console.log("Before deletion:", document.cookie); // 查看当前cookie
+        delCookie("test");
+        console.log("After deletion:", document.cookie); // 查看删除后的cookie
+    </script>
+</body>
+</html>

@@ -7,32 +7,32 @@ const routes: Array<RouteRecordRaw> = [
         path: '/',
         name: 'Home',
         component: HomePage,
-        meta: { title: '言无止境 - 首页' }
+        meta: { title: 'Love and Share - 首页' }
     },
     {
         path: '/login',
         name: 'Login',
         component: () => import('../views/LoginPage.vue'),
-        meta: { title: '言无止境 - 登录' }
+        meta: { title: 'Love and Share - 登录' }
     },
     {
         path: '/register',
         name: 'Register',
-        component: () => import('../views/RegisterPage.vue'),
-        meta: { title: '言无止境 - 注册' }
+        component: () => import('../views/LoginPage.vue'),
+        meta: { title: 'Love and Share - 注册' }
     },
     {
         path: '/message/:id',
         name: 'MessageDetail',
         component: () => import('../views/MessageDetail.vue'),
-        meta: { title: '言无止境 - 详情' }
+        meta: { title: 'Love and Share - 详情' }
     },
     {
         path: '/profile',
         name: 'Profile',
         component: () => import('../views/ProfilePage.vue'),
         meta: { 
-            title: '言无止境 - 个人主页',
+            title: 'Love and Share - 个人主页',
             requiresAuth: true
         }
     },
@@ -41,7 +41,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Settings',
         component: () => import('../views/SettingsPage.vue'),
         meta: { 
-            title: '言无止境 - 设置',
+            title: 'Love and Share - 设置',
             requiresAuth: true
         }
     },
@@ -61,7 +61,7 @@ const router = createRouter({
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
     // 设置页面标题
-    document.title = to.meta.title as string || '言无止境'
+    document.title = to.meta.title as string || 'Love and Share'
     
     // 检查是否需要登录权限
     if (to.matched.some(record => record.meta.requiresAuth)) {

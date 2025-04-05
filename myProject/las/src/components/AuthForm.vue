@@ -230,10 +230,9 @@ const submitForm = async () => {
       const apiResponse = response as any;
       
       if (apiResponse.success) {
-        // 保存token和用户信息
-        localStorage.setItem('accessToken', apiResponse.data.accessToken);
-        localStorage.setItem('refreshToken', apiResponse.data.refreshToken);
-        localStorage.setItem('user', JSON.stringify(apiResponse.data.user));
+        // 注册成功后不自动登录，只发送成功事件
+        // 移除保存token和用户信息的代码
+        console.log('注册成功，用户可以前往登录页面');
         
         // 触发注册成功事件
         emit('register-success', apiResponse.data.user);

@@ -5,7 +5,7 @@
       <div class="header-left">
         <div class="logo">
           <img src="../assets/logo.svg" alt="Logo" />
-          <h1>言无止境</h1>
+          <h1>Love and Share</h1>
         </div>
       </div>
       <div class="header-center">

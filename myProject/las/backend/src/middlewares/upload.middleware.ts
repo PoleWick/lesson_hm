@@ -51,7 +51,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
     } else {
       cb(new Error('不支持的视频格式。请上传mp4, mpeg, mov或avi格式的视频。'));
     }
-  } else if (file.fieldname === 'image' || file.fieldname === 'avatar') {
+  } else if (file.fieldname === 'image' || file.fieldname === 'avatar' || file.fieldname === 'file') {
     // 允许的图片类型
     const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     if (allowedMimes.includes(file.mimetype)) {
@@ -83,14 +83,26 @@ export const imageUpload = multer({
 });
 
 // 错误处理中间件
-export const handleUploadError = (err: Error, req: Request, res: Response, next: NextFunction) => {
+export const handleUploadError = (err: any, req: Request, res: Response, next: NextFunction): void => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ message: '文件大小超出限制' });
+      res.status(400).json({ 
+        success: false,
+        message: '文件大小超出限制' 
+      });
+      return;
     }
-    return res.status(400).json({ message: `上传错误: ${err.message}` });
+    res.status(400).json({ 
+      success: false,
+      message: `上传错误: ${err.message}` 
+    });
+    return;
   } else if (err) {
-    return res.status(400).json({ message: err.message });
+    res.status(400).json({ 
+      success: false,
+      message: err.message 
+    });
+    return;
   }
   next();
 }; 

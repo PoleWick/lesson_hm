@@ -8,6 +8,7 @@ import messageRoutes from './routes/messageRoutes';
 import videoRoutes from './routes/videoRoutes';
 import commentRoutes from './routes/commentRoutes';
 import chatRoutes from './routes/chatRoutes';
+import authRoutes from './routes/auth.routes';
 import { errorHandler } from './middlewares/error.middleware';
 import { setupSwagger } from './middlewares/swagger.middleware';
 import { config } from './config/config';
@@ -41,6 +42,7 @@ app.use('/api', messageRoutes);
 app.use('/api', videoRoutes);
 app.use('/api', commentRoutes);
 app.use('/api', chatRoutes);
+app.use('/api/auth', authRoutes);
 
 // API文档（非生产环境）
 if (process.env.NODE_ENV !== 'production') {
