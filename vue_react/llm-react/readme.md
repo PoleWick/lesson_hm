@@ -14,5 +14,9 @@
     postMessage
     onmessage
 
-
     navigator.gpu
+
+## LLM 加载
+单例模式
+- tokenizer model 下载
+- initialize download progress done

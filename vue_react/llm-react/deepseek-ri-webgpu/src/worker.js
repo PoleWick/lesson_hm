@@ -1,54 +1,77 @@
-/**
- * 检查浏览器是否支持WebGPU
- * 尝试获取GPU适配器来验证WebGPU功能是否可用
- */
-async function check() {
+import {
+    AutoTokenizer,
+    AutoModelForCausalLM
+  } from '@huggingface/transformers'
+  
+  // 共情能力
+  // 面向对象的能力
+  // 封装 继承 多态
+  // 设计模式的思想 单例 
+  // 只会实例化一次 好管理 性能 推迟实例化
+  // transformers 
+  class TextGenerationPipeline {
+    // 蒸馏 方法用的是Qwen 闭源模型   
+    // 让面试官表达 请问他
+    static model_id = "onnx-community/DeepSeek-R1-Distill-Qwen-1.5B-ONNX";
+  
+    static async getInstance(progress_callback = null) {
+      // 分词器
+      this.tokenizer ??= AutoTokenizer.from_pretrained(this.model_id, {
+        progress_callback,
+      });
+      // 模型
+      this.model ??= AutoModelForCausalLM.from_pretrained(this.model_id, {
+        dtype: "q4f16",
+        device: "webgpu",
+        progress_callback,
+      });
+  
+      return Promise.all([this.tokenizer, this.model]);
+    }
+  }
+  
+  // worker 线程 
+  // 不是普通的js 线程
+  // 不可以访问dom
+  async function check() {
     try {
-        // 请求GPU适配器，这是WebGPU API的入口点
-        const adapter = await navigator.gpu.requestAdapter();
-        // 如果无法获取适配器，则表示设备不支持WebGPU
-        if (!adapter) {
-            throw new Error('WebGPU 不支持');
-        }
-    } catch (error) {
-        // 将错误信息发送回主线程
-        self.postMessage({
-            status: 'error',
-            message: error.toString()
-        });
+      // DOM ， BOM 
+      const adapter = await navigator.gpu.requestAdapter();
+      if (!adapter) {
+        throw new Error('WebGPU is not supported!')
+      }
+    } catch(err) {
+      self.postMessage({
+        status: 'error',
+        message: err.toString()
+      });
     }
-}
-
-const load = async () => {
-    // 执行大模型加载
+  }
+  
+  const load = async () => {
     self.postMessage({
-        status: 'loading',
-        message: '大模型加载中...'
-    });
-}
-
-/**
- * WebWorker的消息处理函数
- * 接收来自主线程的消息并根据消息类型执行不同操作
- */
-self.onmessage = function (event) {
-    //   console.log(event.data);
-    // 解构消息数据获取类型和内容
-    const { type, data } = event.data;
-
-    // 根据消息类型执行相应操作
-    switch (type) {
-        case 'check':
-            // 执行WebGPU支持检查
-            check();
-            break;
-        case 'load':
-            // 执行大模型加载
-            load();
-            break;
+      status: 'loading',
+      data: 'Loading model...'
+    })
+    const [tokenizer, model] = await TextGenerationPipeline.getInstance((x) => {
+      console.log(x);
+      self.postMessage(x);
+    })
+  }
+  
+  self.onmessage = function(e) {
+    // console.log(e.data);
+    const { type, data } = e.data
+  
+    switch(type) {
+      case 'check':
+      check();  
+      break;
+      case 'load':
+        load();
+      break;
     }
-    // 向主线程发送确认消息
     // self.postMessage({
-    //     message: 'worker 收到消息'
+    //   message: 'worker 处理完成'
     // });
-}
+  }
